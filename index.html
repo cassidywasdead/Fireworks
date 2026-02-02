@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Fireworks Test</title>
+<title>Firework Test</title>
 <style>
 body {
   margin: 0;
@@ -19,19 +19,33 @@ body {
 }
 </style>
 </head>
-
 <body>
 
 <audio id="fireSound" src="firework.mp3"></audio>
 
 <script>
+let soundUnlocked = false;
+
+document.body.addEventListener("click", function unlockSound() {
+  const sound = document.getElementById("fireSound");
+  sound.play().then(() => {
+    sound.pause();
+    sound.currentTime = 0;
+    soundUnlocked = true;
+    console.log("Sound unlocked");
+  });
+  document.body.removeEventListener("click", unlockSound);
+});
+
 function firework() {
   const x = Math.random() * window.innerWidth;
   const y = Math.random() * window.innerHeight;
 
-  const sound = document.getElementById("fireSound");
-  sound.currentTime = 0;
-  sound.play();
+  if (soundUnlocked) {
+    const sound = document.getElementById("fireSound");
+    sound.currentTime = 0;
+    sound.play();
+  }
 
   const colors = ["red","yellow","orange","pink","cyan","lime","violet","white"];
 
@@ -60,10 +74,7 @@ function firework() {
   }
 }
 
-// auto fireworks
 setInterval(firework, 400);
-
-// click for extra blast
 document.body.onclick = firework;
 </script>
 
