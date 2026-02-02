@@ -1,4 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fireworks</title>
 <style>
+body {
+  margin: 0;
+  background: black;
+  overflow: hidden;
+}
+
 .spark {
   position: fixed;
   width: 6px;
@@ -6,17 +17,35 @@
   border-radius: 50%;
   transition: 1.8s ease-out;
 }
+#hint {
+  position: fixed;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-family: Arial, sans-serif;
+  opacity: 0.6;
+}
 </style>
+</head>
+
+<body>
+
+<div id="hint">Tap screen once to enable sound 🔊</div>
+
+<audio id="fireSound" src="firework.mp3"></audio>
 
 <script>
 let soundUnlocked = false;
 
+// unlock sound on first tap
 document.body.addEventListener("click", function unlockSound() {
   const sound = document.getElementById("fireSound");
   sound.play().then(() => {
     sound.pause();
     sound.currentTime = 0;
     soundUnlocked = true;
+    document.getElementById("hint").style.display = "none";
   });
   document.body.removeEventListener("click", unlockSound);
 });
@@ -58,11 +87,14 @@ function firework() {
   }
 }
 
-// one firework at a time (no overlap)
+// one firework at a time
 function startFireworks() {
   firework();
-  setTimeout(startFireworks, 2200);
+  setTimeout(startFireworks, 2300);
 }
 
 startFireworks();
 </script>
+
+</body>
+</html>
