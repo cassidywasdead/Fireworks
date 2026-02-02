@@ -18,7 +18,8 @@ canvas {
 <body>
 
 <canvas id="canvas"></canvas>
-<audio id="sound" src="fireworks.mp3"></audio>
+
+<audio id="sound" src="fireworks.mp3" loop></audio>
 
 <script>
 const canvas = document.getElementById("canvas");
@@ -70,9 +71,6 @@ function createFirework(x, y) {
     particles.push(new Particle(x, y, color));
   }
   fireworks.push(particles);
-
-  sound.currentTime = 0;
-  sound.play();
 }
 
 function animate() {
@@ -104,6 +102,11 @@ setInterval(() => {
 }, 1200);
 
 animate();
+
+// iPhone autoplay fix: start audio on first touch
+document.body.addEventListener("click", () => {
+  sound.play();
+}, { once: true });
 </script>
 
 </body>
