@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>Fireworks</title>
+
 <style>
 body {
   margin: 0;
@@ -17,44 +18,16 @@ body {
   border-radius: 50%;
   transition: 2s ease-out;
 }
-
-#hint {
-  position: fixed;
-  bottom: 20px;
-  width: 100%;
-  text-align: center;
-  color: white;
-  font-family: Arial;
-  opacity: 0.6;
-}
 </style>
 </head>
 
 <body>
 
-<div id="hint">Tap once to enable sound 🔊</div>
-
-<audio id="fireSound" src="firework.mp3"></audio>
-
 <script>
-let soundUnlocked = false;
-
-document.body.addEventListener("click", function unlockSound() {
-  const sound = document.getElementById("fireSound");
-  sound.volume = 1.0;
-  sound.play().then(() => {
-    sound.pause();
-    sound.currentTime = 0;
-    soundUnlocked = true;
-    document.getElementById("hint").style.display = "none";
-  });
-  document.body.removeEventListener("click", unlockSound);
-});
-
 function blast(x, y) {
-  const colors = ["white", "pink", "yellow", "cyan", "orange", "violet", "lime"];
+  const colors = ["white","pink","yellow","cyan","orange","violet","lime","red"];
 
-  for (let i = 0; i < 160; i++) {
+  for (let i = 0; i < 140; i++) {
     const spark = document.createElement("div");
     spark.className = "spark";
     spark.style.left = x + "px";
@@ -66,8 +39,8 @@ function blast(x, y) {
 
     document.body.appendChild(spark);
 
-    const angle = (i / 160) * Math.PI * 2;
-    const distance = 300 + Math.random() * 200;
+    const angle = (i / 140) * Math.PI * 2;
+    const distance = 250 + Math.random() * 150;
 
     setTimeout(() => {
       spark.style.transform =
@@ -75,38 +48,27 @@ function blast(x, y) {
       spark.style.opacity = 0;
     }, 30);
 
-    setTimeout(() => spark.remove(), 2300);
+    setTimeout(() => spark.remove(), 2200);
   }
 }
 
-function playSound() {
-  if (soundUnlocked) {
-    const s1 = document.getElementById("fireSound").cloneNode();
-    const s2 = document.getElementById("fireSound").cloneNode();
-    s1.volume = 1;
-    s2.volume = 0.8;
-    s1.play();
-    setTimeout(() => s2.play(), 120);
-  }
-}
+let yPos = 150;
 
-function tripleFirework() {
+function doubleRowFireworks() {
   const w = window.innerWidth;
-  const h = window.innerHeight;
 
-  blast(w * 0.3, h * 0.4);
-  blast(w * 0.5, h * 0.35);
-  blast(w * 0.7, h * 0.4);
+  // 2 patakhe ek row me
+  blast(w * 0.3, yPos);
+  blast(w * 0.7, yPos);
 
-  playSound();
+  yPos += 150;
+  if (yPos > window.innerHeight - 150) {
+    yPos = 150;
+  }
 }
 
-function startShow() {
-  tripleFirework();
-  setTimeout(startShow, 2500);
-}
-
-startShow();
+// har 2 second me naye fireworks
+setInterval(doubleRowFireworks, 2000);
 </script>
 
 </body>
