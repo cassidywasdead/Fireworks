@@ -29,7 +29,7 @@ canvas{display:block;}
 
 <div id="startBtn">Tap to Start 🎆</div>
 <canvas id="canvas"></canvas>
-<audio id="fireSound" src="fireworks.mp3"></audio>
+<audio id="fireSound" src="fireworks1.mp3" preload="auto"></audio>
 
 <script>
 const canvas = document.getElementById("canvas");
@@ -43,20 +43,22 @@ audio.volume = 1;
 
 const startBtn = document.getElementById("startBtn");
 
+let soundInterval;
+
 startBtn.onclick = () => {
   startBtn.style.display="none";
-  playSoundLoop();
+  startSoundLoop();
   startFireworks();
 };
 
-// 🔊 perfect loop (no blank gap)
-function playSoundLoop(){
+// 🔊 HARD LOOP (3.8 seconds)
+function startSoundLoop(){
   audio.currentTime = 0;
   audio.play();
-  audio.onended = () => {
+  soundInterval = setInterval(()=>{
     audio.currentTime = 0;
     audio.play();
-  };
+  },3800); // agar duration change ho, yeh number change kar dena
 }
 
 // 🎆 FIREWORK SYSTEM
@@ -68,11 +70,11 @@ function randomColor(){
 }
 
 function createFirework(x,y){
-  const color = randomColor(); // ek patakha = ek hi color
+  const color = randomColor();
   let particles=[];
   for(let i=0;i<200;i++){
-    const angle = (Math.PI*2*i)/200;
-    const speed = Math.random()*6+3;
+    const angle=(Math.PI*2*i)/200;
+    const speed=Math.random()*6+3;
     particles.push({
       x,y,
       vx:Math.cos(angle)*speed,
@@ -108,7 +110,7 @@ function animate(){
 }
 animate();
 
-// 🎇 2 patakhe ek line me continuously
+// 🎇 2 fireworks ek line me
 function startFireworks(){
   setInterval(()=>{
     let y = Math.random()*canvas.height*0.5+100;
@@ -117,7 +119,7 @@ function startFireworks(){
   },1200);
 }
 
-// extra click burst
+// click = extra blast
 canvas.onclick = e => createFirework(e.clientX,e.clientY);
 </script>
 </body>
