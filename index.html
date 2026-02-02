@@ -15,15 +15,16 @@ body {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  transition: 1.8s ease-out;
+  transition: 2s ease-out;
 }
+
 #hint {
   position: fixed;
   bottom: 20px;
   width: 100%;
   text-align: center;
   color: white;
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   opacity: 0.6;
 }
 </style>
@@ -31,16 +32,16 @@ body {
 
 <body>
 
-<div id="hint">Tap screen once to enable sound 🔊</div>
+<div id="hint">Tap once to enable sound 🔊</div>
 
 <audio id="fireSound" src="firework.mp3"></audio>
 
 <script>
 let soundUnlocked = false;
 
-// unlock sound on first tap
 document.body.addEventListener("click", function unlockSound() {
   const sound = document.getElementById("fireSound");
+  sound.volume = 1.0;
   sound.play().then(() => {
     sound.pause();
     sound.currentTime = 0;
@@ -50,19 +51,10 @@ document.body.addEventListener("click", function unlockSound() {
   document.body.removeEventListener("click", unlockSound);
 });
 
-function firework() {
-  const x = window.innerWidth / 2;
-  const y = window.innerHeight / 2;
+function blast(x, y) {
+  const colors = ["white", "pink", "yellow", "cyan", "orange", "violet", "lime"];
 
-  if (soundUnlocked) {
-    const sound = document.getElementById("fireSound");
-    sound.currentTime = 0;
-    sound.play();
-  }
-
-  const colors = ["white", "pink", "yellow", "cyan", "orange", "violet"];
-
-  for (let i = 0; i < 180; i++) {
+  for (let i = 0; i < 160; i++) {
     const spark = document.createElement("div");
     spark.className = "spark";
     spark.style.left = x + "px";
@@ -70,30 +62,51 @@ function firework() {
 
     const color = colors[Math.floor(Math.random() * colors.length)];
     spark.style.background = color;
-    spark.style.boxShadow = `0 0 15px ${color}, 0 0 30px ${color}`;
+    spark.style.boxShadow = `0 0 20px ${color}, 0 0 40px ${color}`;
 
     document.body.appendChild(spark);
 
-    const angle = (i / 180) * Math.PI * 2;
-    const distance = 350 + Math.random() * 150;
+    const angle = (i / 160) * Math.PI * 2;
+    const distance = 300 + Math.random() * 200;
 
     setTimeout(() => {
       spark.style.transform =
         `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
       spark.style.opacity = 0;
-    }, 20);
+    }, 30);
 
-    setTimeout(() => spark.remove(), 2000);
+    setTimeout(() => spark.remove(), 2300);
   }
 }
 
-// one firework at a time
-function startFireworks() {
-  firework();
-  setTimeout(startFireworks, 2300);
+function playSound() {
+  if (soundUnlocked) {
+    const s1 = document.getElementById("fireSound").cloneNode();
+    const s2 = document.getElementById("fireSound").cloneNode();
+    s1.volume = 1;
+    s2.volume = 0.8;
+    s1.play();
+    setTimeout(() => s2.play(), 120);
+  }
 }
 
-startFireworks();
+function tripleFirework() {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+
+  blast(w * 0.3, h * 0.4);
+  blast(w * 0.5, h * 0.35);
+  blast(w * 0.7, h * 0.4);
+
+  playSound();
+}
+
+function startShow() {
+  tripleFirework();
+  setTimeout(startShow, 2500);
+}
+
+startShow();
 </script>
 
 </body>
